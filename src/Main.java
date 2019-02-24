@@ -23,16 +23,32 @@ public class Main {
 
     public static void main(String[] args) throws ForecastException {
         Main yeet = new Main();
-        String[] fcTimes = yeet.fcTimes(47, -88.5);
+        ArrayList<Double []> myCoordList = yeet.makeCoordList();
+        String [] singleHour = new String[18];
 
-//        yeet.req(47, -88.5);
-//        for(String t : yeet.fcTimes(47, -88.5)){
-//            System.out.println(t);
-//        }
+        int j = 1;
+        int [] aliases = {3, 4, 5, 9, 10, 14};
+        for (Double [] coordinate : myCoordList) {
+            if(j == myCoordList.size() - 1)
+                break;
+            System.out.println("Location " + j + ":");
+            j++;
+            String [] report = yeet.fcTimes(myCoordList.get(j)[0], myCoordList.get(j)[1]);
+
+            for (int k = 3; k < report.length; k++){
+                String hour = report[k];
+                singleHour = hour.split(",");
+                System.out.println("hour " + (k -2) );
+                k++;
+                for(int index : aliases) {
+                    System.out.println(singleHour[index]);
+                }
+            }
+
+            System.out.println();
+        }
 
 
-        yeet.makeCoordList();
-        System.out.println();
     }
     public void req(double lat, double lon) throws ForecastException {
         ForecastRequest request = new ForecastRequestBuilder()
@@ -83,9 +99,6 @@ public class Main {
                     JSONObject jLeg = (JSONObject) leg;  //creates a JSON object
                     JSONArray steps = (JSONArray) jLeg.get("steps"); //creates an array of steps
 
-//                    Double duration = (Double) jLeg.get("duration"); //retrieves deration in steps
-//                    System.out.println(duration); //prints duration
-
                     //Loop for steps
                     for(Object step : steps) {
                         JSONObject jStep = (JSONObject) step;
@@ -108,19 +121,8 @@ public class Main {
                         cordsList.add(coord);
 
 
-                        System.out.println("[" + coord[0] + ", " + coord[1] + ", " + coord[2] + "]");
+                       // System.out.println("[" + coord[0] + ", " + coord[1] + ", " + coord[2] + "]");
 
-//                        JSONArray intersections = (JSONArray) jStep.get("intersections");
-////
-////                        //Loop for intsections
-////                        for(Object intersection : intersections) {
-////                            JSONObject jIntersection = (JSONObject) intersection; //creats a JSON object
-////
-////                            //gets the coodanate pare of location
-////                            JSONArray location = (JSONArray) jIntersection.get("location");
-////                            Double [] cords = {(Double) location.get(0), (Double) location.get(1)};
-////                            cordsList.add(cords);
-////                        }
                     }
                 }
             }
